@@ -39,7 +39,7 @@ public class DialogueMan : MonoBehaviour {
         new DialogueEntry(false, 1, 3, "No you won't!"),
         new DialogueEntry(true, 1, 3, "I'll never give up!"),
         new DialogueEntry(false, 1, 3, "You're weak!"),
-        new DialogueEntry(true, 1, 5, "As princess, it's my duty to protect this kingdom!"),
+        new DialogueEntry(true, 1, 5, "I will defeat you!"),
         new DialogueEntry(false, 1, 4, "Fool!")
         };
 

@@ -3,27 +3,37 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
-    public Sprite animStanding;
-    public Sprite animStandingL;
-    public Sprite animDashing;
-    public Sprite animDashingL;
-    public Sprite animJump;
-    public Sprite animJumpL;
+
+    [System.Serializable]
+    public class PlayerSprites
+    {
+        public Sprite animStanding;
+        public Sprite animStandingL;
+        public Sprite animDashing;
+        public Sprite animDashingL;
+        public Sprite animJump;
+        public Sprite animJumpL;
+    }
+    public PlayerSprites sprites;
     public float dashSpeed = 5f;
     public float jumpSpeed = 20f;
     public float friction = 1f;
+    public GameObject dashingPrefab;
 
     private SpriteRenderer sr;
+    private float distToFeet;
     private float groundCheckDistance;
     private Rigidbody2D rb;
     private bool isFacingRight = true;
+    private bool wasDashing = false;
 
 	void Start ()
     {
         sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
 
-        groundCheckDistance = GetComponent<BoxCollider2D>().bounds.extents.y + 0.3f;
+        distToFeet = GetComponent<BoxCollider2D>().bounds.extents.y;
+        groundCheckDistance = distToFeet + 0.3f;
 	}
 
     private bool isStanding()
@@ -53,15 +63,18 @@ public class Player : MonoBehaviour {
         bool isDashing = false;
         if (Input.GetKey(KeyCode.RightArrow) && !Input.GetKey(KeyCode.LeftArrow))
         {
-            anim = animDashing;
+            if (!wasDashing)
+            {
+                Instantiate(dashingPrefab, transform.position + new Vector3(0, -distToFeet, 0), transform.rotation);
+            }
+            anim = sprites.animDashing;
             rb.velocity = new Vector2(dashSpeed, rb.velocity.y);
             isDashing = true;
             isFacingRight = true;
         }
         else if (Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
         {
-            
-            anim = animDashingL;
+            anim = sprites.animDashingL;
             rb.velocity = new Vector2(-dashSpeed, rb.velocity.y);
             isDashing = true;
             isFacingRight = false;
@@ -86,9 +99,9 @@ public class Player : MonoBehaviour {
             if(!isDashing)
             {
                 if(isFacingRight)
-                    anim = animStanding;
+                    anim = sprites.animStanding;
                 else
-                    anim = animStandingL;
+                    anim = sprites.animStandingL;
             }
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -98,10 +111,11 @@ public class Player : MonoBehaviour {
         else if(!isDashing)
         {
             if (isFacingRight)
-                anim = animJump;
+                anim = sprites.animJump;
             else
-                anim = animJumpL;
+                anim = sprites.animJumpL;
         }
+        wasDashing = isDashing;
     }
 	
 	void FixedUpdate ()
