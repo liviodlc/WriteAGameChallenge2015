@@ -21,7 +21,7 @@ public class ControlDisplay : MonoBehaviour {
 	void Start () {
         arrowList = new GameObject[dlist.Length];
 
-        float i = GetComponent<RectTransform>().sizeDelta.x + 30f;
+        float i = 30f;
         foreach(Direction d in dlist)
         {
             GameObject key = Instantiate(arrowPrefab);
@@ -31,10 +31,11 @@ public class ControlDisplay : MonoBehaviour {
             akey.Init();
             akey.direction = d;
 
-            key.transform.SetParent(transform, false);
             RectTransform keyTrans = key.GetComponent<RectTransform>();
-            keyTrans.localPosition = new Vector3(i, keyTrans.sizeDelta.y / 2 + 2f, 0);
+            key.transform.localPosition = new Vector3(i, 0f, 0f);
             i += keyTrans.sizeDelta.x + keySpacing;
+
+            key.transform.SetParent(transform, false);
         }
 
         a = 0;
